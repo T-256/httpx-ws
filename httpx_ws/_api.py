@@ -17,7 +17,7 @@ else:
 import httpcore
 import httpx
 import wsproto
-from httpcore.backends.base import AsyncNetworkStream, NetworkStream
+from httpcore import AsyncNetworkStream, NetworkStream
 from wsproto.connection import CloseReason
 
 from httpx_ws._ping import AsyncPingManager, PingManager

@@ -5,8 +5,14 @@ import contextlib
 import json
 import queue
 import secrets
+import sys
 import threading
 import typing
+
+if sys.version_info < (3, 8):
+    from typing_extensions import Literal  # pragma: no cover
+else:
+    from typing import Literal  # pragma: no cover
 
 import httpcore
 import httpx
@@ -16,7 +22,7 @@ from wsproto.connection import CloseReason
 
 from httpx_ws._ping import AsyncPingManager, PingManager
 
-JSONMode = typing.Literal["text", "binary"]
+JSONMode = Literal["text", "binary"]
 TaskFunction = typing.TypeVar("TaskFunction")
 TaskResult = typing.TypeVar("TaskResult")
 

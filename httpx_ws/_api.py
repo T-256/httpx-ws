@@ -18,7 +18,7 @@ import httpcore
 import httpx
 import wsproto
 from httpcore import AsyncNetworkStream, NetworkStream
-from wsproto.connection import CloseReason
+from wsproto.connection import CloseReason, LocalProtocolError
 
 from httpx_ws._ping import AsyncPingManager, PingManager
 
@@ -636,6 +636,10 @@ class AsyncWebSocketSession:
         """
         try:
             data = self.connection.send(event)
+        except LocalProtocolError as e:
+            raise ShouldClose()
+
+        try:
             await self.stream.write(data)
         except httpcore.WriteError as e:
             await self.close(CloseReason.INTERNAL_ERROR, "Stream write error")

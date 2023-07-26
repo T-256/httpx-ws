@@ -100,7 +100,7 @@ class WebSocketSession:
 
     def __init__(
         self,
-        stream: NetworkStream,
+        response: httpx.Response,
         *,
         max_message_size_bytes: int = DEFAULT_MAX_MESSAGE_SIZE_BYTES,
         queue_size: int = DEFAULT_QUEUE_SIZE,
@@ -112,7 +112,8 @@ class WebSocketSession:
         ] = DEFAULT_KEEPALIVE_PING_TIMEOUT_SECONDS,
         subprotocol: typing.Optional[str] = None,
     ) -> None:
-        self.stream = stream
+        self.response = response
+        self.stream = response.extensions["network_stream"]
         self.connection = wsproto.Connection(wsproto.ConnectionType.CLIENT)
         self.subprotocol = subprotocol
 
@@ -186,6 +187,10 @@ class WebSocketSession:
         """
         try:
             data = self.connection.send(event)
+        except LocalProtocolError as e:
+            raise ShouldClose()
+
+        try:
             self.stream.write(data)
         except httpcore.WriteError as e:
             self.close(CloseReason.INTERNAL_ERROR, "Stream write error")
@@ -1028,7 +1033,7 @@ def _connect_ws(
         subprotocol = response.headers.get("sec-websocket-protocol")
 
         session = WebSocketSession(
-            response.extensions["network_stream"],
+            response,
             max_message_size_bytes=max_message_size_bytes,
             queue_size=queue_size,
             keepalive_ping_interval_seconds=keepalive_ping_interval_seconds,

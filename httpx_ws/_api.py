@@ -550,7 +550,7 @@ class AsyncWebSocketSession:
 
     def __init__(
         self,
-        stream: AsyncNetworkStream,
+        response: httpx.Response,
         *,
         max_message_size_bytes: int = DEFAULT_MAX_MESSAGE_SIZE_BYTES,
         queue_size: int = DEFAULT_QUEUE_SIZE,
@@ -562,7 +562,8 @@ class AsyncWebSocketSession:
         ] = DEFAULT_KEEPALIVE_PING_TIMEOUT_SECONDS,
         subprotocol: typing.Optional[str] = None,
     ) -> None:
-        self.stream = stream
+        self.response = response
+        self.stream = response.extensions["network_stream"]
         self.connection = wsproto.Connection(wsproto.ConnectionType.CLIENT)
         self.subprotocol = subprotocol
 
@@ -1159,7 +1160,7 @@ async def _aconnect_ws(
         subprotocol = response.headers.get("sec-websocket-protocol")
 
         session = AsyncWebSocketSession(
-            response.extensions["network_stream"],
+            response,
             max_message_size_bytes=max_message_size_bytes,
             queue_size=queue_size,
             keepalive_ping_interval_seconds=keepalive_ping_interval_seconds,

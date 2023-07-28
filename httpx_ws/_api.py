@@ -5,6 +5,7 @@ import contextlib
 import json
 import queue
 import secrets
+import ssl
 import sys
 import threading
 import typing
@@ -494,7 +495,7 @@ class WebSocketSession:
                     if isinstance(event, wsproto.events.CloseConnection):
                         self._should_close.set()
                     self._events.put(event)
-        except (httpcore.ReadError, httpcore.WriteError):
+        except (httpcore.ReadError, httpcore.WriteError, ssl.SSLError):
             self.close(CloseReason.INTERNAL_ERROR, "Stream error")
             self._events.put(WebSocketNetworkError())
         except ShouldClose:
@@ -952,7 +953,7 @@ class AsyncWebSocketSession:
                     if isinstance(event, wsproto.events.CloseConnection):
                         self._should_close.set()
                     await self._events.put(event)
-        except (httpcore.ReadError, httpcore.WriteError):
+        except (httpcore.ReadError, httpcore.WriteError, ssl.SSLError):
             await self.close(CloseReason.INTERNAL_ERROR, "Stream error")
             await self._events.put(WebSocketNetworkError())
         except ShouldClose:

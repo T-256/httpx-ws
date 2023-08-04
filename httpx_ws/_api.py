@@ -516,7 +516,10 @@ class WebSocketSession:
                 )
                 if should_close:
                     raise ShouldClose()
-                pong_callback = self.ping()
+                try:
+                    pong_callback = self.ping()
+                except WebSocketNetworkError:
+                    continue
                 if timeout_seconds is not None:
                     acknowledged = self._wait_until_closed(
                         pong_callback.wait, timeout_seconds
@@ -975,7 +978,10 @@ class AsyncWebSocketSession:
         try:
             while not self._should_close.is_set():
                 await self._wait_until_closed(asyncio.sleep(interval_seconds))
-                pong_callback = await self.ping()
+                try:
+                    pong_callback = await self.ping()
+                except WebSocketNetworkError:
+                    continue
                 if timeout_seconds is not None:
                     try:
                         await self._wait_until_closed(

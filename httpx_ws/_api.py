@@ -191,7 +191,8 @@ class WebSocketSession:
         try:
             data = self.connection.send(event)
         except LocalProtocolError as e:
-            raise ShouldClose()
+            self.close(CloseReason.INTERNAL_ERROR, "Local protocol error")
+            raise ShouldClose() from e
 
         try:
             with self._write_lock:
@@ -673,7 +674,8 @@ class AsyncWebSocketSession:
         try:
             data = self.connection.send(event)
         except LocalProtocolError as e:
-            raise ShouldClose()
+            self.close(CloseReason.INTERNAL_ERROR, "Local protocol error")
+            raise ShouldClose() from e
 
         try:
             async with self._write_lock:

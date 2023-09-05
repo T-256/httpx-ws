@@ -524,7 +524,7 @@ class WebSocketSession:
             self.close(CloseReason.INTERNAL_ERROR, "Stream error")
             self._events.put(WebSocketNetworkError())
         except ShouldClose:
-            pass
+            self._events.put(WebSocketNetworkError())
 
     def _background_keepalive_ping(
         self, interval_seconds: float, timeout_seconds: typing.Optional[float] = None
@@ -548,7 +548,7 @@ class WebSocketSession:
                         self.close(CloseReason.INTERNAL_ERROR, "Keepalive ping timeout")
                         self._events.put(WebSocketNetworkError())
         except ShouldClose:
-            pass
+            self._events.put(WebSocketNetworkError())
 
     def _wait_until_closed(
         self, callable: typing.Callable[..., TaskResult], *args, **kwargs
@@ -1011,7 +1011,7 @@ class AsyncWebSocketSession:
             await self.close(CloseReason.INTERNAL_ERROR, "Stream error")
             await self._events.put(WebSocketNetworkError())
         except ShouldClose:
-            pass
+            await self._events.put(WebSocketNetworkError())
 
     async def _background_keepalive_ping(
         self, interval_seconds: float, timeout_seconds: typing.Optional[float] = None
@@ -1034,7 +1034,7 @@ class AsyncWebSocketSession:
                         )
                         await self._events.put(WebSocketNetworkError())
         except ShouldClose:
-            pass
+            await self._events.put(WebSocketNetworkError())
 
     async def _wait_until_closed(
         self, coro: typing.Coroutine[typing.Any, typing.Any, TaskResult]

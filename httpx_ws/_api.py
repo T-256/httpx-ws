@@ -549,6 +549,7 @@ class AsyncWebSocketSession:
     """
 
     subprotocol: typing.Optional[str]
+    response: typing.Optional[httpx.Response]
 
     def __init__(
         self,

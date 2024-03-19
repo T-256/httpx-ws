@@ -29,8 +29,7 @@ def websocket_implementation(request) -> Literal["wsproto", "websockets"]:
 
 
 class ServerFactoryFixture(Protocol):
-    def __call__(self, endpoint: Callable) -> ContextManager[str]:
-        ...
+    def __call__(self, endpoint: Callable) -> ContextManager[str]: ...
 
 
 @pytest.fixture

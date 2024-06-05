@@ -21,6 +21,29 @@
 
 ---
 
+Add back Python 3,.7 support via cherry-picking.
+
+Excluded commits:
+
+- https://github.com/frankie567/httpx-ws/commit/a94cfb53e1eedaedad1852df67705eb440fd9bf5
+
+- https://github.com/frankie567/httpx-ws/commit/828e8ffb42e268ba8941b7b02ea06f2bcc59f642
+
+- https://github.com/frankie567/httpx-ws/commit/f0a11492d8544e776acc46856dfdba56ccee7531
+
+- https://github.com/frankie567/httpx-ws/commit/de2384465d10813641b099b43e5c2657830bb1c7
+
+Merged conflicts with acceptence of both _current_ and _incoming_:
+
+- https://github.com/T-256/httpx-ws/commit/254e86f0ea3aa1b34ab37d5ecfed9214a8811d28
+
+Included commits:
+
+- https://github.com/T-256/httpx-ws/commit/a73d64d8ffcfc03c1393fee92bf3d39838a6825f
+- https://github.com/T-256/httpx-ws/commit/8f81902de153cfce81c23b20f578c04ac1748733
+
+---
+
 **Documentation**: <a href="https://frankie567.github.io/httpx-ws/" target="_blank">https://frankie567.github.io/httpx-ws/</a>
 
 **Source Code**: <a href="https://github.com/frankie567/httpx-ws" target="_blank">https://github.com/frankie567/httpx-ws</a>

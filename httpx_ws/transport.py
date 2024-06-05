@@ -48,7 +48,7 @@ class ASGIWebSocketAsyncNetworkStream(AsyncNetworkStream):
         self.portal = self.exit_stack.enter_context(
             anyio.from_thread.start_blocking_portal("asyncio")
         )
-        _: "Future[None]" = self.portal.start_task_soon(self._run)
+        _: Future[None] = self.portal.start_task_soon(self._run)
 
         await self.send({"type": "websocket.connect"})
         message = await self.receive()
@@ -166,9 +166,8 @@ class ASGIWebSocketTransport(ASGITransport):
 
         if scheme in {"ws", "wss"} or headers.get("upgrade") == "websocket":
             subprotocols: typing.List[str] = []
-            if (
-                subprotocols_header := headers.get("sec-websocket-protocol")
-            ) is not None:
+            subprotocols_header = headers.get("sec-websocket-protocol")
+            if subprotocols_header is not None:
                 subprotocols = subprotocols_header.split(",")
 
             scope = {

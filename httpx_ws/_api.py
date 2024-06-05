@@ -576,9 +576,10 @@ class AsyncWebSocketSession:
         else:
             self.subprotocol = None
 
-        self._send_event, self._receive_event = anyio.create_memory_object_stream[
-            typing.Union[wsproto.events.Event, HTTPXWSException]
-        ]()
+        # self._send_event, self._receive_event = anyio.create_memory_object_stream[
+        #     typing.Union[wsproto.events.Event, HTTPXWSException]
+        # ]()
+        self._send_event, self._receive_event = anyio.create_memory_object_stream()
 
         self._ping_manager = AsyncPingManager()
         self._should_close = anyio.Event()

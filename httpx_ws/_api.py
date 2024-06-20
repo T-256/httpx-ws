@@ -19,6 +19,7 @@ import httpx
 import wsproto
 from httpcore import AsyncNetworkStream, NetworkStream
 from wsproto.frame_protocol import CloseReason
+from wsproto.utilities import LocalProtocolError
 
 from ._exceptions import (
     HTTPXWSException,
@@ -671,6 +672,10 @@ class AsyncWebSocketSession:
         """
         try:
             data = self.connection.send(event)
+        except LocalProtocolError:
+            raise ShouldClose()
+
+        try:
             async with self._write_lock:
                 await self.stream.write(data)
         except httpcore.WriteError as e:
